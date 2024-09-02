@@ -35,24 +35,30 @@ class UserController extends Controller
         }
 
 
-        $upload_dir = public_path('storage/uploads/');
-        if (!empty($_FILES)) {
-            $upload_file = $upload_dir . $_FILES['avatar']['name'];
-            if (move_uploaded_file($_FILES['avatar']['tmp_name'], $upload_file)) {
-                \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
-                $path_info = pathinfo($upload_file);
+        $avatarPath = null;
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
 
-                $source = \Tinify\fromFile($upload_file);
+            // Генерація унікального імені файлу
+            $filename = time() . '_' . $file->getClientOriginalName();
 
-                $resized = $source->resize(array(
-                    "method" => "fit",
-                    "width" => 70,
-                    "height" => 70
-                ));
-                $resized->toFile($upload_dir . $path_info['filename'] . '_thumb' . '.' . 'jpg');
-                $avatarPath = 'uploads/' . $path_info['filename'] . '_thumb' . '.' . 'jpg';
-            }
+            // Збереження файлу у директорії `storage/app/public/uploads`
+            $filePath = $file->storeAs('uploads', $filename, 'public');
+
+            // Використання бібліотеки Tinify для оптимізації зображення (якщо потрібно)
+            \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
+            $source = \Tinify\fromFile(Storage::path($filePath));
+            $resized = $source->resize([
+                "method" => "fit",
+                "width" => 70,
+                "height" => 70
+            ]);
+            $resized->toFile(Storage::path('uploads/' . pathinfo($filename, PATHINFO_FILENAME) . '_thumb.jpg'));
+
+            // Оновлюємо шлях до зображення
+            $avatarPath = 'uploads/' . pathinfo($filename, PATHINFO_FILENAME) . '_thumb.jpg';
         }
+
         $url =url(Storage::url($avatarPath));
 //dd($url);
         // Створення користувача
