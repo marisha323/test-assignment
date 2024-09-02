@@ -45,13 +45,14 @@ class UserController extends Controller
             $filePath = $file->storeAs('uploads', $filename, 'public');
 
             // Виведення шляху для перевірки
-            dd('File path: ' . Storage::path($filePath));  // Переконайтесь, що шлях правильний
+            $fullPath = Storage::path($filePath);
+            dd('File path: ' . $fullPath);
 
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
             try {
-                $source = \Tinify\fromFile(Storage::path($filePath));
+                $source = \Tinify\fromFile($fullPath);
 
                 $resized = $source->resize([
                     "method" => "fit",
@@ -65,7 +66,6 @@ class UserController extends Controller
                 $avatarPath = $resizedPath;
 
             } catch (\Exception $e) {
-                // Логування помилки
                 \Log::error('Tinify error: ' . $e->getMessage());
                 return response()->json(['error' => 'Image processing error'], 500);
             }
