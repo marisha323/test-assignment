@@ -47,7 +47,9 @@ class UserController extends Controller
 
             // Використання бібліотеки Tinify для оптимізації зображення (якщо потрібно)
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
+            dd(Storage::path($filePath));
             $source = \Tinify\fromFile(Storage::path($filePath));
+
             $resized = $source->resize([
                 "method" => "fit",
                 "width" => 70,
