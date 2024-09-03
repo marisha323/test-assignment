@@ -21,7 +21,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        //  dd($request);
         // Валідація даних
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -34,9 +33,6 @@ class UserController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-
-
-        //$upload_dir = public_path('storage/uploads/');
         $avatarPath = null;
 
         if ($request->hasFile('avatar')) {
@@ -49,6 +45,7 @@ class UserController extends Controller
             $path = $file->store('uploads', 'public');
             // Отримання локального шляху до файлу
             $localPath = storage_path('app/public/' . $path);
+
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
@@ -62,7 +59,6 @@ class UserController extends Controller
                     "height" => 70
                 ]);
 
-
                 // Отримання імені файлу без розширення
                 $filenameWithoutExtension = pathinfo($filename, PATHINFO_FILENAME);
 
@@ -72,25 +68,24 @@ class UserController extends Controller
 
                 // Оновлюємо шлях до зображення
                 $avatarPath = $resizedPath;
-
             } catch (\Exception $e) {
                 \Log::error('Tinify error: ' . $e->getMessage());
                 return response()->json(['error' => 'Image processing error'], 500);
             }
-
-            return response()->json(['message' => 'Image uploaded and processed successfully', 'path' => $avatarPath]);
         }
 
-        $url = url(Storage::url($avatarPath));
-var_dump($url);
+        // Отримання URL до зображення
+        $avatarUrl = $avatarPath ? url(Storage::url($avatarPath)) : null;
+
         // Створення користувача
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'avatar' => $url ?? null,
+            'avatar' => $avatarUrl,
         ]);
-var_dump($user);
+        var_dump($avatarUrl.' user '. $user);
+
         return response()->json($user);
     }
 }
