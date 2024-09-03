@@ -41,7 +41,7 @@ class UserController extends Controller
             $file = $request->file('avatar');
 
 
-            $path = $file->store('images/image_product', 'public');
+            $path = $file->store('uploads', 'public');
             $fullUrl = url(Storage::url($path));
 
             dd('File path: ' . $path );
