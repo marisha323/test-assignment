@@ -84,7 +84,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'avatar' => $avatarUrl,
         ]);
-        var_dump($avatarUrl.' user '. $user);
+        var_dump('avatar!!!!!!!'.$avatarPath);
 
         return response()->json($user);
     }
