@@ -44,7 +44,7 @@ class UserController extends Controller
 
             $path = $file->store('uploads', 'public');
             $fullPath = Storage::path($path);
-            $fullUrl = url(Storage::url($avatarPath));
+            $fullUrl = url(Storage::url($path));
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
