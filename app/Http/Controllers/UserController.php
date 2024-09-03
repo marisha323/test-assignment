@@ -55,7 +55,7 @@ class UserController extends Controller
 
             try {
                 // Завантаження зображення з локального файлу
-                $source = \Tinify\fromUrl('https://png.pngtree.com/png-clipart/20210128/ourmid/pngtree-surprised-surprised-png-image_2829455.jpg');
+                $source = \Tinify\fromUrl($fullUrl);
 
                 // Розмір зображення
                 $resized = $source->resize([
