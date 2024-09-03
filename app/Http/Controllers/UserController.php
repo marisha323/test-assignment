@@ -47,10 +47,8 @@ class UserController extends Controller
 
             // Збереження файлу у директорії `storage/app/public/uploads`
             $path = $file->store('uploads', 'public');
-
             // Отримання локального шляху до файлу
             $localPath = storage_path('app/public/' . $path);
-            var_dump($localPath);
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
@@ -63,7 +61,7 @@ class UserController extends Controller
                     "width" => 70,
                     "height" => 70
                 ]);
-    var_dump($resized);
+
 
                 // Отримання імені файлу без розширення
                 $filenameWithoutExtension = pathinfo($filename, PATHINFO_FILENAME);
@@ -83,26 +81,8 @@ class UserController extends Controller
             return response()->json(['message' => 'Image uploaded and processed successfully', 'path' => $avatarPath]);
         }
 
-//        if ($request->hasFile('avatar')) {
-//            $file = $request->file('avatar');
-//            $upload_file = $upload_dir . $file->getClientOriginalName();
-//            if ($file->move($upload_dir, $file->getClientOriginalName())) {
-//                \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
-//                $path_info = pathinfo($upload_file);
-//
-//                $source = \Tinify\fromFile($upload_file);
-//
-//                $resized = $source->resize(array(
-//                    "method" => "fit",
-//                    "width" => 70,
-//                    "height" => 70
-//                ));
-//                $resized->toFile($upload_dir . $path_info['filename'] . '_thumb' . '.' . $path_info['extension']);
-//                $avatarPath = 'storage/uploads/' . $path_info['filename'] . '_thumb' . '.' . $path_info['extension'];
-//            }
-//        }
         $url = url(Storage::url($avatarPath));
-//dd($url);
+var_dump($url);
         // Створення користувача
         $user = User::create([
             'name' => $request->name,
@@ -110,7 +90,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'avatar' => $url ?? null,
         ]);
-
+var_dump($user);
         return response()->json($user);
     }
 }
