@@ -42,34 +42,45 @@ class UserController extends Controller
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
 
-            $path = $file->store('uploads', 'public');
+            // Генерація унікального імені файлу
+            $filename = time() . '_' . $file->getClientOriginalName();
+
+            // Збереження файлу у директорії `storage/app/public/uploads`
+            $path = $file->storeAs('uploads', $filename, 'public');
+
+            // Отримання локального шляху
             $fullPath = Storage::path($path);
-            $fullUrl = url(Storage::url($path));
+            var_dump($fullPath);
+
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
+            try {
+                // Завантаження зображення з локального файлу
+                $source = \Tinify\fromFile($fullPath);
 
-                $source = \Tinify\fromUrl($fullUrl);
-
-
+                // Розмір зображення
                 $resized = $source->resize([
                     "method" => "fit",
                     "width" => 70,
                     "height" => 70
                 ]);
 
-            // Отримання імені файлу без розширення
-            $filenameWithoutExtension = pathinfo($path, PATHINFO_FILENAME);
+                // Отримання імені файлу без розширення
+                $filenameWithoutExtension = pathinfo($filename, PATHINFO_FILENAME);
 
-            // Збереження оптимізованого зображення
-            $resizedPath = 'uploads/' . $filenameWithoutExtension . '_thumb.jpg';
-            $resized->toFile(Storage::path($resizedPath));
+                // Збереження оптимізованого зображення
+                $resizedPath = 'uploads/' . $filenameWithoutExtension . '_thumb.jpg';
+                $resized->toFile(Storage::path($resizedPath));
 
-            // Шлях, який буде збережено в базі даних
+                // Оновлюємо шлях до зображення
                 $avatarPath = $resizedPath;
 
+            } catch (\Exception $e) {
+                \Log::error('Tinify error: ' . $e->getMessage());
+                return response()->json(['error' => 'Image processing error'], 500);
+            }
         }
-
         $url = url(Storage::url($avatarPath));
 //dd($url);
         // Створення користувача
