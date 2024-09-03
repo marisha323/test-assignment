@@ -88,7 +88,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'avatar' => $url,
+            'avatar' => $url ?? null,
         ]);
 
         return response()->json($user);
