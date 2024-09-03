@@ -48,13 +48,14 @@ class UserController extends Controller
 
             // Отримання повного шляху до файлу
             $fullPath = Storage::path($filePath);
+            dd('File path: ' . $fullPath . ' $filePath '.'  '.$filePath);
 
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
             try {
                 $source = \Tinify\fromFile($fullPath);
-                dd($source);
+
 
                 $resized = $source->resize([
                     "method" => "fit",
