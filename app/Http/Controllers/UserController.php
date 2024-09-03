@@ -47,15 +47,15 @@ class UserController extends Controller
 
             // Збереження файлу у директорії `storage/app/public/uploads`
             $path = $file->store('uploads', 'public');
-            $fullUrl = url(Storage::url($path));
-            $exists = Storage::disk('uploads')->exists($path);
-            var_dump($fullUrl.' '.$exists);
+            $fullPath = url(Storage::path($path));
+
+            var_dump($fullPath);
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
-            try {
+
                 // Завантаження зображення з локального файлу
-                $source = \Tinify\fromUrl($fullUrl);
+                $source = \Tinify\fromUrl($fullPath);
 
                 // Розмір зображення
                 $resized = $source->resize([
@@ -63,7 +63,7 @@ class UserController extends Controller
                     "width" => 70,
                     "height" => 70
                 ]);
-                dd($resized);
+            var_dump($resized);
 
                 // Отримання імені файлу без розширення
                 $filenameWithoutExtension = pathinfo($filename, PATHINFO_FILENAME);
@@ -75,10 +75,7 @@ class UserController extends Controller
                 // Оновлюємо шлях до зображення
                 $avatarPath = $resizedPath;
 
-            } catch (\Exception $e) {
-                \Log::error('Tinify error: ' . $e->getMessage());
-                return response()->json(['error' => 'Image processing error'], 500);
-            }
+
         }
 
 //        if ($request->hasFile('avatar')) {
