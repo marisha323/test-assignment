@@ -48,8 +48,8 @@ class UserController extends Controller
             // Збереження файлу у директорії `storage/app/public/uploads`
             $path = $file->store('uploads', 'public');
             $fullUrl = url(Storage::url($path));
-            var_dump($fullUrl);
-
+            $exists = Storage::disk('s3')->exists($path);
+            var_dump($fullUrl.' '.$exists);
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
