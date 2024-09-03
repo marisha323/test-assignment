@@ -47,35 +47,40 @@ class UserController extends Controller
 
             // Збереження файлу у директорії `storage/app/public/uploads`
             $path = $file->store('uploads', 'public');
-            $fullPath = url(Storage::path($path));
 
-            var_dump($fullPath);
+            // Отримання локального шляху до файлу
+            $localPath = storage_path('app/public/' . $path);
+            var_dump($localPath);
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
-
+            try {
                 // Завантаження зображення з локального файлу
-                $source = \Tinify\fromUrl($fullPath);
-
+                $source = \Tinify\fromFile($localPath);
                 // Розмір зображення
                 $resized = $source->resize([
                     "method" => "fit",
                     "width" => 70,
                     "height" => 70
                 ]);
-            var_dump($resized);
+    var_dump($resized);
 
                 // Отримання імені файлу без розширення
                 $filenameWithoutExtension = pathinfo($filename, PATHINFO_FILENAME);
 
                 // Збереження оптимізованого зображення
                 $resizedPath = 'uploads/' . $filenameWithoutExtension . '_thumb.jpg';
-                $resized->toFile(Storage::path($resizedPath));
+                $resized->toFile(storage_path('app/public/' . $resizedPath));
 
                 // Оновлюємо шлях до зображення
                 $avatarPath = $resizedPath;
 
+            } catch (\Exception $e) {
+                \Log::error('Tinify error: ' . $e->getMessage());
+                return response()->json(['error' => 'Image processing error'], 500);
+            }
 
+            return response()->json(['message' => 'Image uploaded and processed successfully', 'path' => $avatarPath]);
         }
 
 //        if ($request->hasFile('avatar')) {
