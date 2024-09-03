@@ -46,7 +46,7 @@ class UserController extends Controller
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
 
-                $source = \Tinify\fromFile($fullPath);
+                $source = \Tinify\fromFile($path);
 
 
                 $resized = $source->resize([
