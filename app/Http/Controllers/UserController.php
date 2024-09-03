@@ -75,14 +75,14 @@ class UserController extends Controller
         }
 
         // Отримання URL до зображення
-        $avatarUrl = $avatarPath ? url(Storage::url($avatarPath)) : null;
+        $url = url(Storage::url($avatarPath));
 
         // Створення користувача
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'avatar' => $avatarUrl,
+            'avatar' => $url,
         ]);
         var_dump('avatar!!!!!!!'.$avatarPath);
 
