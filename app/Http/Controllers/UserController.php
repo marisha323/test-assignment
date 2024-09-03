@@ -46,7 +46,7 @@ class UserController extends Controller
 
             // Виведення шляху для перевірки
             $fullPath = Storage::path($filePath);
-            //dd('File path: ' . $fullPath);
+            dd('File path: ' . $fullPath . '$filePath'.'  '.$filePath);
 
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
