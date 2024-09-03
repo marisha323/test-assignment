@@ -63,6 +63,7 @@ class UserController extends Controller
                     "width" => 70,
                     "height" => 70
                 ]);
+                dd($resized);
 
                 // Отримання імені файлу без розширення
                 $filenameWithoutExtension = pathinfo($filename, PATHINFO_FILENAME);
