@@ -40,15 +40,11 @@ class UserController extends Controller
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
 
-            // Генерація унікального імені файлу
-            $filename = time() . '_' . $file->getClientOriginalName();
 
-            // Збереження файлу у директорії `storage/app/public/uploads`
-            $filePath = $file->storeAs('uploads', $filename, 'public');
+            $path = $file->store('images/image_product', 'public');
+            $fullUrl = url(Storage::url($path));
 
-            // Отримання повного шляху до файлу
-            $fullPath = Storage::path($filePath);
-            dd('File path: ' . $fullPath . ' $filePath '.'  '.$filePath);
+            dd('File path: ' . $path );
 
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
@@ -76,7 +72,7 @@ class UserController extends Controller
             }
         }
 
-        $url =url(Storage::url($avatarPath));
+        $url = url(Storage::url($avatarPath));
 //dd($url);
         // Створення користувача
         $user = User::create([
