@@ -55,7 +55,7 @@ class UserController extends Controller
 
             try {
                 // Завантаження зображення з локального файлу
-                $source = \Tinify\fromFile($fullUrl);
+                $source = \Tinify\fromUrl($fullUrl);
 
                 // Розмір зображення
                 $resized = $source->resize([
