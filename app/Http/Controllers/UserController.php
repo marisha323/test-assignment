@@ -46,18 +46,16 @@ class UserController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
 
             // Збереження файлу у директорії `storage/app/public/uploads`
-            $path = $file->storeAs('uploads', $filename, 'public');
-
-            // Отримання локального шляху
-            $fullPath = Storage::path($path);
-            var_dump($fullPath);
+            $path = $file->store('uploads', 'public');
+            $fullUrl = url(Storage::url($path));
+            var_dump($fullUrl);
 
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
             try {
                 // Завантаження зображення з локального файлу
-                $source = \Tinify\fromFile($fullPath);
+                $source = \Tinify\fromFile($fullUrl);
 
                 // Розмір зображення
                 $resized = $source->resize([
