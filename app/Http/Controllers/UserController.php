@@ -44,13 +44,13 @@ class UserController extends Controller
             $path = $file->store('uploads', 'public');
             $fullUrl = url(Storage::url($path));
 
-            dd('File path: ' . $path );
+
 
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
             try {
-                $source = \Tinify\fromFile($fullPath);
+                $source = \Tinify\fromFile($path);
 
 
                 $resized = $source->resize([
