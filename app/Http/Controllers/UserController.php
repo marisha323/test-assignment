@@ -35,6 +35,8 @@ class UserController extends Controller
         }
 
 
+        $avatarPath = null;
+
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
 
@@ -44,15 +46,15 @@ class UserController extends Controller
             // Збереження файлу у директорії `storage/app/public/uploads`
             $filePath = $file->storeAs('uploads', $filename, 'public');
 
-            // Виведення шляху для перевірки
+            // Отримання повного шляху до файлу
             $fullPath = Storage::path($filePath);
-            dd('File path: ' . $fullPath . '$filePath'.'  '.$filePath);
 
             // Використання бібліотеки Tinify для оптимізації зображення
             \Tinify\setKey("YQq20x4f4RfWLdHbfvCKLWbQ489b591r");
 
             try {
                 $source = \Tinify\fromFile($fullPath);
+                dd($source);
 
                 $resized = $source->resize([
                     "method" => "fit",
@@ -60,9 +62,11 @@ class UserController extends Controller
                     "height" => 70
                 ]);
 
+                // Збереження оптимізованого зображення
                 $resizedPath = 'uploads/' . pathinfo($filename, PATHINFO_FILENAME) . '_thumb.jpg';
                 $resized->toFile(Storage::path($resizedPath));
 
+                // Шлях, який буде збережено в базі даних
                 $avatarPath = $resizedPath;
 
             } catch (\Exception $e) {
